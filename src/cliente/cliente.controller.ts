@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -27,27 +26,27 @@ export class ClienteController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.clienteService.findOne(id);
   }
 
   @Get(':id/cuentas')
-  getCuentasByCliente(@Param('id', ParseIntPipe) id: number) {
+  getCuentasByCliente(@Param('id') id: string) {
     return this.clienteService.findCuentasByCliente(id);
   }
 
   @Get(':id/completo')
-  getClienteConCuentasYTransacciones(@Param('id', ParseIntPipe) id: number) {
+  getClienteConCuentasYTransacciones(@Param('id') id: string) {
     return this.clienteService.obtenerClienteCompleto(id);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateClienteDto) {
+  update(@Param('id') id: string, @Body() dto: UpdateClienteDto) {
     return this.clienteService.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: string) {
     return this.clienteService.remove(id);
   }
 }

@@ -46,8 +46,12 @@ export class TransaccionService {
           monto: new Prisma.Decimal(dto.monto),
           moneda: dto.moneda,
           estado: 'APROBADA',
-          cuentaId: dto.cuentaId,
-          empresa: dto.empresa,
+          cuenta: {
+            connect: { id: dto.cuentaId },
+          },
+          empresa: {
+            connect: { id: dto.empresaId },
+          },
         },
       }),
       this.prisma.cuenta.update({
@@ -69,7 +73,7 @@ export class TransaccionService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const trx = await this.prisma.transaccion.findUnique({ where: { id } });
     if (!trx) {
       throw new NotFoundException('Transacción no encontrada');
@@ -77,12 +81,21 @@ export class TransaccionService {
     return trx;
   }
 
-  async update(id: number, dto: UpdateTransaccionDto) {
+  async update(id: string, dto: UpdateTransaccionDto) {
     await this.findOne(id); // Ensure the transaction exists
-    return this.prisma.transaccion.update({ where: { id }, data: dto });
+    return this.prisma.transaccion.update({
+      where: { id },
+      data: {
+        monto: dto.monto,
+        moneda: dto.moneda,
+        estado: dto.estado,
+        cuentaId: dto.cuentaId,
+        empresaId: dto.empresaId, // Assuming empresaId is a string
+      },
+    });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     await this.findOne(id);
     return this.prisma.transaccion.delete({ where: { id } });
   }

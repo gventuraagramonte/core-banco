@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { CuentaService } from './cuenta.service';
 import { CreateCuentaDto } from './dto/create-cuenta.dto';
@@ -27,17 +26,17 @@ export class CuentaController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.cuentaService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCuentaDto) {
+  update(@Param('id') id: string, @Body() dto: UpdateCuentaDto) {
     return this.cuentaService.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: string) {
     return this.cuentaService.remove(id);
   }
 }

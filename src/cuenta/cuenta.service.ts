@@ -25,7 +25,7 @@ export class CuentaService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const cuenta = await this.prisma.cuenta.findUnique({
       where: { id },
     });
@@ -36,7 +36,7 @@ export class CuentaService {
     return cuenta;
   }
 
-  async update(id: number, dto: UpdateCuentaDto) {
+  async update(id: string, dto: UpdateCuentaDto) {
     await this.findOne(id); // Verifica si la cuenta existe
     return this.prisma.cuenta.update({
       where: { id },
@@ -44,7 +44,7 @@ export class CuentaService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     await this.findOne(id);
     return this.prisma.cuenta.update({
       where: { id },

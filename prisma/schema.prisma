@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Cliente {
-  id       Int      @id @default(autoincrement())
+  id       String   @id @default(uuid())
   dni      String   @unique
   nombres  String
   correo   String   @unique
@@ -24,23 +24,46 @@ model Cliente {
 }
 
 model Cuenta {
-  id            Int           @id @default(autoincrement())
-  numeroCuenta  String        @unique
-  saldo         Decimal       @default(0.00)
-  moneda        String        @default("PEN")
-  activo        Boolean       @default(true)
-  clienteId     Int
-  cliente       Cliente       @relation(fields: [clienteId], references: [id])
+  id            String            @id @default(uuid())
+  numeroCuenta  String            @unique
+  saldo         Decimal           @default(0.00)
+  moneda        TransaccionMoneda
+  activo        Boolean           @default(true)
+  clienteId     String
+  cliente       Cliente           @relation(fields: [clienteId], references: [id])
   transacciones Transaccion[]
 }
 
 model Transaccion {
-  id       Int      @id @default(autoincrement())
-  monto    Decimal
-  empresa  String
-  estado   String
-  moneda   String   @default("PEN")
-  fecha    DateTime @default(now())
-  cuentaId Int
-  cuenta   Cuenta   @relation(fields: [cuentaId], references: [id])
+  id        String            @id @default(uuid())
+  monto     Decimal
+  estado    TransaccionEstado
+  moneda    TransaccionMoneda
+  cuentaId  String
+  cuenta    Cuenta            @relation(fields: [cuentaId], references: [id])
+  empresaId String
+  empresa   Empresa           @relation(fields: [empresaId], references: [id])
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model Empresa {
+  id            String        @id @default(uuid())
+  nombre        String
+  ruc           String        @unique
+  activa        Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  transacciones Transaccion[]
+}
+
+enum TransaccionEstado {
+  APROBADA
+  FALLIDO
+  PENDIENTE
+}
+
+enum TransaccionMoneda {
+  PEN
+  USD
 }

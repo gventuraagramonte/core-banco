@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { TransaccionMoneda } from '@prisma/client';
+import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class CreateCuentaDto {
   @IsString()
@@ -10,8 +11,9 @@ export class CreateCuentaDto {
 
   @IsString()
   @IsNotEmpty()
-  moneda: string;
+  moneda: TransaccionMoneda;
 
-  @IsNumber()
-  clienteId: number;
+  @IsNotEmpty()
+  @IsUUID()
+  clienteId: string;
 }

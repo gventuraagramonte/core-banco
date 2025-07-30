@@ -7,8 +7,16 @@ import { UpdateClienteDto } from './dto/update-cliente.dto';
 export class ClienteService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateClienteDto) {
-    return this.prisma.cliente.create({ data });
+  async create(dto: CreateClienteDto) {
+    console.log('Creating cliente with data:', dto);
+    return this.prisma.cliente.create({
+      data: {
+        dni: dto.dni,
+        nombres: dto.nombres,
+        correo: dto.correo,
+        telefono: dto.telefono,
+      },
+    });
   }
 
   async findAll() {
@@ -17,7 +25,7 @@ export class ClienteService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const cliente = await this.prisma.cliente.findUnique({
       where: { id },
       include: { cuentas: true },
@@ -28,7 +36,7 @@ export class ClienteService {
     return cliente;
   }
 
-  async update(id: number, data: UpdateClienteDto) {
+  async update(id: string, data: UpdateClienteDto) {
     const cliente = await this.findOne(id);
     return this.prisma.cliente.update({
       where: { id: cliente.id },
@@ -36,7 +44,7 @@ export class ClienteService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const cliente = await this.findOne(id);
     return this.prisma.cliente.update({
       where: { id: cliente.id },
@@ -44,7 +52,7 @@ export class ClienteService {
     });
   }
 
-  async findCuentasByCliente(id: number) {
+  async findCuentasByCliente(id: string) {
     const cliente = await this.prisma.cliente.findUnique({
       where: { id },
       include: {
@@ -61,7 +69,7 @@ export class ClienteService {
     return cliente.cuentas;
   }
 
-  async obtenerClienteCompleto(id: number) {
+  async obtenerClienteCompleto(id: string) {
     return this.prisma.cliente.findUnique({
       where: { id },
       include: {
