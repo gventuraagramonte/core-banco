@@ -4,6 +4,7 @@ import { CuentaModule } from './cuenta/cuenta.module';
 import { TransaccionModule } from './transaccion/transaccion.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { EmpresaModule } from './empresa/empresa.module';
+import { AuditoriaModule } from './auditoria/auditoria.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { EmpresaModule } from './empresa/empresa.module';
     TransaccionModule,
     PrismaModule,
     EmpresaModule,
+    AuditoriaModule,
   ],
   controllers: [],
   providers: [],

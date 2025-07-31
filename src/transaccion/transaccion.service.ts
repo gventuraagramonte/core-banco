@@ -7,10 +7,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTransaccionDto } from './dto/create-transaccion.dto';
 import { UpdateTransaccionDto } from './dto/update-transaccion.dto';
 import { Prisma } from '@prisma/client';
+import { AuditoriaService } from 'src/auditoria/auditoria.service';
 
 @Injectable()
 export class TransaccionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private auditoriaService: AuditoriaService,
+  ) {}
 
   async create(dto: CreateTransaccionDto) {
     const cuenta = await this.prisma.cuenta.findUnique({
@@ -62,6 +66,13 @@ export class TransaccionService {
       }),
     ]);
 
+    await this.auditoriaService.registrar({
+      entidad: 'Transacción',
+      entidadId: transaccion.id,
+      accion: 'CREAR',
+      detalle: `Transacción creada con monto ${dto.monto} ${dto.moneda} para la cuenta ${dto.cuentaId}`,
+    });
+
     return transaccion;
   }
 
@@ -83,6 +94,12 @@ export class TransaccionService {
 
   async update(id: string, dto: UpdateTransaccionDto) {
     await this.findOne(id); // Ensure the transaction exists
+    await this.auditoriaService.registrar({
+      entidad: 'Transaccion',
+      entidadId: id,
+      accion: 'ACTUALIZAR',
+      detalle: `Se actualizo la transacción con ID ${id}`,
+    });
     return this.prisma.transaccion.update({
       where: { id },
       data: {
@@ -97,6 +114,12 @@ export class TransaccionService {
 
   async remove(id: string) {
     await this.findOne(id);
+    await this.auditoriaService.registrar({
+      entidad: 'Transaccion',
+      entidadId: id,
+      accion: 'ELIMINAR',
+      detalle: `Se eliminó la transacción con ID ${id}`,
+    });
     return this.prisma.transaccion.delete({ where: { id } });
   }
 }

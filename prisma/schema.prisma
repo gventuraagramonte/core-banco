@@ -57,6 +57,16 @@ model Empresa {
   transacciones Transaccion[]
 }
 
+model Auditoria {
+  id        String   @id @default(uuid())
+  accion    String
+  entidad   String
+  entidadId String
+  usuario   String
+  detalle   String
+  timestamp DateTime @default(now())
+}
+
 enum TransaccionEstado {
   APROBADA
   FALLIDO
