@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ClienteModule } from './cliente/cliente.module';
 import { CuentaModule } from './cuenta/cuenta.module';
 import { TransaccionModule } from './transaccion/transaccion.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { EmpresaModule } from './empresa/empresa.module';
 import { AuditoriaModule } from './auditoria/auditoria.module';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -18,4 +19,8 @@ import { AuditoriaModule } from './auditoria/auditoria.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
