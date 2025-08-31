@@ -76,12 +76,15 @@ export class TransaccionService {
     return transaccion;
   }
 
-  findAll() {
-    return this.prisma.transaccion.findMany({
+  async findAll() {
+    const transacciones = await this.prisma.transaccion.findMany({
       include: {
         cuenta: true,
+        empresa: true,
       },
     });
+
+    return transacciones;
   }
 
   async findOne(id: string) {
