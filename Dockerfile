@@ -1,43 +1,48 @@
 # Dependencias
 FROM node:22-alpine AS deps
-
 WORKDIR /usr/src/app
 
 COPY package*.json ./
+RUN npm ci
 
-RUN npm install
+# Copiamos solo prisma para cachear la generación
+COPY prisma ./prisma
+# Genera el client ANTES de compilar (necesario para tipos/enums en build)
+RUN npx prisma generate
 
 # Builder - Construye la aplicacion
 FROM node:22-alpine AS builder
-
 WORKDIR /usr/src/app
 
-# Copiar de deps los modulos de node
+# Trae node_modules ya con @prisma/client generado
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 
+# Copia el resto del código
 COPY . .
 
+# Compila Nest
 RUN npm run build
-
-RUN npm ci -f --only=production && npm cache clean --force
-
-RUN npx prisma generate
 
 # Crear la imagen final
 FROM node:22-alpine AS prod
-
 WORKDIR /usr/src/app
-
-COPY --from=builder /usr/src/app/node_modules ./node_modules
-
-# Copiar la carpeta de DIST
-COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/prisma ./prisma
-
 ENV NODE_ENV=production
 
+# Dependencias del sistema que Prisma puede requerir en alpine
+RUN apk add --no-cache openssl libc6-compat
+
+# Copiamos solo lo necesario
+COPY package*.json ./
+COPY --from=deps /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/dist ./dist
+COPY prisma ./prisma
+
+# Opcional: reducir tamaño (mantiene @prisma/client)
+RUN npm prune --omit=dev
+
+# Por si el prune reinstaló algo, re-genera (seguro y rápido)
+RUN npx prisma generate
+
 USER node
-
-EXPOSE 3000
-
-CMD [ "node","dist/main.js" ]
+EXPOSE 3001
+CMD ["node", "dist/main.js"]
