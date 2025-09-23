@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { EmpresaModule } from './empresa/empresa.module';
 import { AuditoriaModule } from './auditoria/auditoria.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
     PrismaModule,
     EmpresaModule,
     AuditoriaModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [],

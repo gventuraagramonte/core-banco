@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: recaudaciones-api
+  namespace: recaudaciones
+  labels:
+    app: recaudaciones-api
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - api.recaudaciones.local
+      secretName: recaudaciones-tls
+  rules:
+    - host: api.recaudaciones.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: recaudaciones-api
+                port:
+                  number: 80
