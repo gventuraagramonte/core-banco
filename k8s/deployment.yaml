@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: recaudaciones-api
-          image: gio0603/reca-api:c026ecf
+          image: gio0603/reca-api:528092e
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
