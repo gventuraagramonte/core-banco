@@ -4,7 +4,10 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function boostrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    origin: ['https://recaudaciones.local'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
