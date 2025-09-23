@@ -21,6 +21,12 @@ spec:
       containers:
         - name: recaudaciones-api
           image: gio0603/reca-api:528092e
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: neon-db
+                  key: DATABASE_URL
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
