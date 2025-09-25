@@ -29,17 +29,17 @@ spec:
                   key: DATABASE_URL
             # Collector
             # ==== NUEVO (OTel -> Collector) ====
-            - name: OTEL_TRACES_EXPORTER
-              value: "otlp"
-            - name: OTEL_EXPORTER_OTLP_PROTOCOL
-              value: "grpc"
-            - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-              value: "coralogix-opentelemetry-collector.observability.svc:4317"
-            # identidad del servicio (APM)
-            - name: OTEL_SERVICE_NAME
-              value: "core-banco-api"
-            - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "cx.application.name=core-banco,cx.subsystem.name=api,service.namespace=recaudaciones,service.version=13c4bfc"
+            # - name: OTEL_TRACES_EXPORTER
+            #   value: "otlp"
+            # - name: OTEL_EXPORTER_OTLP_PROTOCOL
+            #   value: "grpc"
+            # - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+            #   value: "coralogix-opentelemetry-collector.observability.svc:4317"
+            # # identidad del servicio (APM)
+            # - name: OTEL_SERVICE_NAME
+            #   value: "core-banco-api"
+            # - name: OTEL_RESOURCE_ATTRIBUTES
+            #   value: "cx.application.name=core-banco,cx.subsystem.name=api,service.namespace=recaudaciones,service.version=13c4bfc"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
