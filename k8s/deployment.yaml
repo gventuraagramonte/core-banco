@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: recaudaciones-api
-          image: gio0603/reca-api:13c4bfc
+          image: gio0603/reca-api:d4e79f2
           env:
             - name: DATABASE_URL
               valueFrom:
